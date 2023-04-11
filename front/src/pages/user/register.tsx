@@ -7,11 +7,15 @@ import { TextField } from '@mui/material'
 import { useForm } from 'react-hook-form'
 
 export default function Home() {
-    type FormData = {
-        firstName: string;
-        lastName: string;
-    };
+
   const {data: session, status: loading} = useSession()
+  
+    type FormData = {
+      name: string,
+      email: string,
+      password: string,
+      password_confirm: string; 
+    };
   const { register, setValue, handleSubmit, formState: { errors } } = useForm<FormData>();
   const onSubmit = handleSubmit(data => console.log(data));
 
@@ -36,10 +40,10 @@ export default function Home() {
             </div>
             <br></br>
             <form onSubmit={onSubmit}>
-                <div><TextField id="outlined-basic" label="名前" variant="outlined" margin='normal' sx={{ width:"100%" }} {...register('title',{required:true})} required />{errors.eventName && <span className={styles.requiredError}>必須です</span>}</div>
-                <div><TextField id="outlined-basic" label="メールアドレス" variant="outlined" margin='normal' sx={{ width:"100%" }} {...register('title',{required:true})} required />{errors.eventName && <span className={styles.requiredError}>必須です</span>}</div>
-                <div><TextField id="outlined-basic" label="パスワード" variant="outlined" margin='normal' sx={{ width:"100%" }} {...register('title',{required:true})} required />{errors.eventName && <span className={styles.requiredError}>必須です</span>}</div>
-                <div><TextField id="outlined-basic" label="パスワード確認" variant="outlined" margin='normal' sx={{ width:"100%" }} {...register('title',{required:true})} required />{errors.eventName && <span className={styles.requiredError}>必須です</span>}</div>
+                <div><TextField id="outlined-basic" label="名前" variant="outlined" margin='normal' sx={{ width:"100%" }} {...register('name',{required:true})} required />{errors.name && <span className={styles.requiredError}>必須です</span>}</div>
+                <div><TextField id="outlined-basic" label="メールアドレス" variant="outlined" margin='normal' sx={{ width:"100%" }} {...register('email',{required:true})} required />{errors.email && <span className={styles.requiredError}>必須です</span>}</div>
+                <div><TextField id="outlined-basic" label="パスワード" variant="outlined" margin='normal' sx={{ width:"100%" }} {...register('password',{required:true})} required />{errors.password && <span className={styles.requiredError}>必須です</span>}</div>
+                <div><TextField id="outlined-basic" label="パスワード確認" variant="outlined" margin='normal' sx={{ width:"100%" }} {...register('password_confirm',{required:true})} required />{errors.password_confirm && <span className={styles.requiredError}>必須です</span>}</div>
                 <Button type='submit' className={styles.login_button} variant="contained" sx={{width:"100%"}}>次へ</Button>
             </form>
           </div>

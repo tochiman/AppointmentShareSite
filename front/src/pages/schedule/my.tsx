@@ -27,7 +27,6 @@ export default function My() {
                 </Head>
                 <Header site="my" />
                 <LoginSnackBar />
-
             </>
         )
     } 
