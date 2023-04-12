@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form'
 export default function Home() {
 
   const {data: session, status: loading} = useSession()
-  
+
     type FormData = {
       name: string,
       email: string,
@@ -32,7 +32,7 @@ export default function Home() {
         <div className={styles.Main}>
           <div className={styles.new_border}>
             <div>
-            <h1　className={styles.register_title}>
+            <h1 className={styles.register_title}>
                 <img className={styles.logo} src='../favicon.ico' />
                 <a className={styles.auth_title} href="/schedule/my">予定共有サイト</a>
             </h1>
