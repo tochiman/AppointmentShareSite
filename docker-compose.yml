@@ -1,1 +1,81 @@
-version: '3'
+version: "3.8"
+services:
+  front:
+    container_name: AppFront
+    hostname: 'docker.compose.frontserver.com'
+    build: 
+      context: ./front
+      dockerfile: .Dockerfile
+    working_dir: /front
+    ports:
+      - 3000:3000
+    volumes:
+      - ./front:/front
+    tty: true
+    environment:
+      - WATCHPACK_POLLING=true
+    depends_on:
+      api:
+        condition: service_started
+    networks:
+      app_network:
+        ipv4_address: 192.168.100.1
+      
+  api:
+    container_name: AppApi
+    hostname: 'docker.compose.apiserver.com'
+    build: 
+      context: ./api
+      dockerfile: .Dockerfile
+    ports:
+     - 8080:8080
+    tty: true
+    restart: always
+    volumes:
+      - type: bind
+        source: ./api
+        target: /go/src
+    env_file:
+      - ./db/.env_sql
+    depends_on:
+      db:
+        condition: service_started
+    networks:
+      app_network:
+        ipv4_address: 192.168.100.2
+
+  db:
+    container_name: AppDB
+    hostname: 'docker.compose.dbserver.com'
+    build:
+      context: ./db
+      dockerfile: .Dockerfile
+    tty: true
+    # platform: linux/x86_64
+    ports:
+      - 3306:3306
+    env_file:
+      - ./db/.env_sql
+    volumes:
+      - type: volume
+        source: mysql_volume
+        target: /var/lib/mysql
+      # - type: bind
+      #   source: ./db/init
+      #   target: /docker-entrypoint-initdb.d
+    networks:
+      app_network:
+        ipv4_address: 192.168.100.3
+
+volumes:
+  mysql_volume:
+    name: mysql_volume
+
+networks:
+  app_network:
+    driver: bridge
+    ipam:
+     driver: default
+     config:
+       - subnet: 192.168.100.0/24
+         gateway: 192.168.100.254
