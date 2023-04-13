@@ -1,7 +1,7 @@
-	package service
+package service
 
 import (
-	"apiserver/model"
+	"api/model"
 	"log"
 )
 
@@ -30,6 +30,7 @@ func (UserService) GetUserInformation(email string) []model.User {
 func (UserService) AddUserInformation(user *model.User) error {
 	db := connectDB()
 	defer db.Close()
+
 
 	user.Id = Generate_uuid() 
 	_, err := db.NamedExec(

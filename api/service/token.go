@@ -1,7 +1,7 @@
 package service
 
 import (
-	"apiserver/model"
+	"api/model"
 	"log"
 )
 
@@ -31,9 +31,9 @@ func (IdService) GetToken(id string) []model.Token{
 func (IdService) AddToken(token *model.Token) error {
 	db := connectDB()
 	defer db.Close()
-
-	token.Token = Generate_token() 
-	_, err := db.NamedExec(
+	var err error
+	token.Token, err = Generate_token(210) 
+	_, err = db.NamedExec(
 		"INSERT INTO token (id, token) VALUES(:id, :token) ", token)
 	if err != nil {
 		return err

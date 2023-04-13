@@ -1,8 +1,8 @@
 package main
 
 import (
-	"apiserver/controller"
-	"apiserver/middleware"
+	"api/controller"
+	"api/middleware"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	// "time"

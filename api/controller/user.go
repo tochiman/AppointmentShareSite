@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"apiserver/model"
-	"apiserver/service"
+	"api/model"
+	"api/service"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
