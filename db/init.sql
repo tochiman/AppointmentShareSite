@@ -1,7 +1,10 @@
 SET CHARACTER_SET_CLIENT = utf8;
 SET CHARACTER_SET_CONNECTION = utf8;
 
-CREATE TABLE user (
+CREATE DATABASE IF NOT EXISTS AppointmenShareSite;
+USE AppointmenShareSite;
+
+CREATE TABLE  IF NOT EXISTS user (
     id                      VARCHAR(36) PRIMARY KEY NOT NULL,
     username                TEXT NOT NULL,
     password                TEXT, 
@@ -9,13 +12,13 @@ CREATE TABLE user (
     image                   MEDIUMBLOB
 );
 
-CREATE TALBE token (
+CREATE TABLE  IF NOT EXISTS token (
     id                      VARCHAR(36) NOT NULL,
     token                   VARCHAR(210) UNIQUE NOT NULL,
     FOREIGN KEY uuid(id) REFERENCES user(id) on delete cascade on update cascade
 );
 
-CREATE TABLE calendar (
+CREATE TABLE  IF NOT EXISTS calendar (
     id                      VARCHAR(36) primary key NOT NULL,
     start                   VARCHAR(40) NOT NULL,
     end                     VARCHAR(40) NOT NULL,
