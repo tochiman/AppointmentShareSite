@@ -96,12 +96,12 @@ export default function My() {
                         }}
                         
                         headerToolbar={{
-                            start: 'prevYear,prev,next,nextYear',
+                            start: 'today',
                             center: 'title',
                             end: 'NewCalendarButton',
                         }}
                         footerToolbar={{
-                            start: 'today', 
+                            start: 'prevYear,prev,next,nextYear', 
                             center: '',
                             end: 'dayGridMonth,timeGridWeek,timeGridDay', 
                         }}
