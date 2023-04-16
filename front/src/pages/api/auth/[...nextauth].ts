@@ -26,8 +26,8 @@ const options = {
       // credentials は、ログインページで適切なフォームを生成するために使用されます。
       // 送信するフィールドを指定できます。（今回は メールアドレス と パスワード）
       credentials: {
-        email: { label: "Email", type: "email", placeholder: "email@example.com" },
-        password: { label: "Password", type: "password" },
+        email: { label: "メールアドレス", type: "email", placeholder: "email@example.com" },
+        password: { label: "パスワード", type: "password" },
       },
       // 認証の関数
       async authorize(credentials) {
