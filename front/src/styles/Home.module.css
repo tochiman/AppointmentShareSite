@@ -1,6 +1,12 @@
 .container {
-  padding: 0 2rem;
+  padding: 0 1.3rem;
   text-align: center;
+}
+@media screen and (min-width: 810px) {
+  .container {
+    margin: 0 auto;
+    width:60%;
+  }
 }
 
 .Main {
@@ -36,6 +42,20 @@
   justify-content: center;
   align-items: center;
   flex-grow: 1;
+}
+
+.helperText{
+  color: rgba(0, 0, 0, 0.6);
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 0.75rem;
+  line-height: 1.66;
+  letter-spacing: 0.03333em;
+  text-align: left;
+  margin-top: 3px;
+  margin-right: 14px;
+  margin-bottom: 10px;
+  margin-left: 14px;
 }
 
 .title a {
@@ -81,19 +101,10 @@
 .new_border{
   border: 2px solid rgba(17, 17, 17, 0.162);
   border-radius: 16px;
-  padding:  25px 15px;
-  margin-top: 30px;
+  padding:  20px 15px;
+  margin-top: 20px;
   width: 100%;
   background-color:rgba(255, 255, 255, 0.762);
-}
-@media screen and (max-width:810px) {
-  .new_border{
-    border: 2px solid rgba(17, 17, 17, 0.162);
-    border-radius: 16px;
-    padding:  30px 20px;
-    width: 100%;
-    background-color:rgba(255, 255, 255, 0.762);
-  }
 }
 
 .auth_title{
@@ -106,16 +117,10 @@
 
 .sub_title{
   color: black;
-  margin: 1;
   line-height: 1.15;
-  font-size: 1.8rem;
+  font-size: 1.4rem;
   text-align: center;
-}
-
-@media screen and (max-width:810px) {
-  .auth_title{
-    font-size: 2em;
-  }
+  margin: 10px;
 }
 
 .hednav ul li a{
@@ -128,6 +133,13 @@
   .hednav ul li a{
     display: none;
   }
+}
+
+.labelName{
+  line-height: 40px;
+  margin-right: 10px;
+  font-size: large;
+  font-weight: bold;
 }
 
 .triming {
