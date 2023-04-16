@@ -33,8 +33,11 @@ func (IdService) AddToken(token *model.Token) error {
 	defer db.Close()
 	var err error
 	token.Token, err = Generate_token(210) 
+	if err != nil {
+		return err
+	}
 	_, err = db.NamedExec(
-		"INSERT INTO token (id, token) VALUES(:id, :token) ", token)
+		"INSERT INTO token (id, token) VALUES(:id, :token) ", token.Token)
 	if err != nil {
 		return err
 	}

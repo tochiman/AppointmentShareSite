@@ -1,10 +1,21 @@
 .container {
   padding: 0 2rem;
+  text-align: center;
 }
 
 .Main {
   min-height: 100vh;
   padding: 2rem 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.main {
+  padding: 2rem 0;
+  width: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -63,14 +74,16 @@
 }
 
 .register_title{
+  width: 100%;
   text-align: center;
 }
 
 .new_border{
   border: 2px solid rgba(17, 17, 17, 0.162);
   border-radius: 16px;
-  padding:  30px 20px;
-  width: 65%;
+  padding:  25px 15px;
+  margin-top: 30px;
+  width: 100%;
   background-color:rgba(255, 255, 255, 0.762);
 }
 @media screen and (max-width:810px) {
@@ -78,7 +91,7 @@
     border: 2px solid rgba(17, 17, 17, 0.162);
     border-radius: 16px;
     padding:  30px 20px;
-    width: 95%;
+    width: 100%;
     background-color:rgba(255, 255, 255, 0.762);
   }
 }
@@ -87,7 +100,7 @@
   color: black;
   margin: 0;
   line-height: 1.15;
-  font-size: 2.7rem;
+  font-size: 2.5rem;
   text-align: center;
 }
 

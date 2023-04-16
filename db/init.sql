@@ -1,8 +1,8 @@
 SET CHARACTER_SET_CLIENT = utf8;
 SET CHARACTER_SET_CONNECTION = utf8;
 
-CREATE DATABASE IF NOT EXISTS AppointmenShareSite;
-USE AppointmenShareSite;
+CREATE DATABASE IF NOT EXISTS AppointmentShareSite;
+USE AppointmentShareSite;
 
 CREATE TABLE  IF NOT EXISTS user (
     id                      VARCHAR(36) PRIMARY KEY NOT NULL,

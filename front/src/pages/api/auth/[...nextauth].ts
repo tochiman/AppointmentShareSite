@@ -12,7 +12,7 @@ const findUserByCredentials = credentials  => {
     const secret = process.env.JWT_SECRET;
     const token =  jwt.sign(credentials.email, secret); 
     // ログイン可ならユーザー情報を返却
-    return { id: 1, name: "taro",  email: credentials.email, image: PersonIcon , jwt: token}
+    return { id: 1, name: "taro",  email: credentials.email, image: "https://img.icons8.com/pastel-glyph/64/000000/person-male--v2.png" , jwt: token}
   } else {
     // ログイン不可の場合は null を返却
     return null
@@ -44,6 +44,7 @@ const options = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID ?? '',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
   callbacks: {
