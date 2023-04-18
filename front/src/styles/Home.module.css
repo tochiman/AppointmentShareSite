@@ -2,9 +2,20 @@
   padding: 0 1.3rem;
   text-align: center;
 }
+.settingcontainer {
+  padding: 0 1.3rem;
+  margin-top: 100px;
+  text-align: center;
+}
+
 @media screen and (min-width: 810px) {
   .container {
     margin: 0 auto;
+    width:60%;
+  }
+  .settingcontainer {
+    margin: 0 auto;
+    margin-top: 100px;
     width:60%;
   }
 }
@@ -89,7 +100,7 @@
 .auth_border{
   border: 2px solid rgba(17, 17, 17, 0.162);
   border-radius: 16px;
-  padding:  30px 55px;
+  padding:  30px 40px;
   background-color:rgba(255, 255, 255, 0.762);
 }
 

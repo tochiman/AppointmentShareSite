@@ -1,8 +1,6 @@
 import NextAuth from 'next-auth'
 import CredentialsProviders from "next-auth/providers/credentials"
 import GoogleProvider from 'next-auth/providers/google'
-import jwt from 'jsonwebtoken'
-import PersonIcon from '@mui/icons-material/Person';
 
 // credentials の情報から、ログイン可能か判定してユーザー情報を返す関数
 const findUserByCredentials = credentials  => {

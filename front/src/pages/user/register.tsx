@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import * as React from 'react';
-import Router from 'next/router'
 import styles from '@/styles/Home.module.css'
 import {signIn, useSession} from 'next-auth/react'
 import * as yup from 'yup'
@@ -16,12 +15,9 @@ import {
   Typography,
   Alert,
   IconButton,
-  Input,
-  FilledInput,
   OutlinedInput,
   InputLabel,
   InputAdornment,
-  MenuItem,
   FormControl,
   Table, 
   TableBody, 
@@ -49,6 +45,19 @@ export default function Home() {
       password : "",
       password_confirm : "",
   });
+  const [open, setOpen] = React.useState(false);
+  const [Alert400, setAlert400] = React.useState(false);
+  const [Alert500, setAlert500] = React.useState(false);
+  const [Alert201, setAlert201] = React.useState(false);
+  
+
+  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   //パスワードの表示・非表示
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -56,7 +65,7 @@ export default function Home() {
 
 
   //ステップバー関連
-  const steps = ['アカウント登録', '確認', '登録完了'];
+  const steps = ['アカウント登録', '確認', '結果'];
   const [activeStep, setActiveStep] = React.useState(0);
 
   const handleNext = () => {
@@ -66,7 +75,6 @@ export default function Home() {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
-
 
   //入力フォーム関連
   type FormData = {
@@ -92,7 +100,6 @@ export default function Home() {
       resolver: yupResolver(schema),
   });
   const onSubmit = handleSubmit((data: FormData) => {
-    event?.preventDefault()
     if (data.password === data.password_confirm){
       handleNext()        //次のステップへ
       setFormValue(data)
@@ -101,9 +108,32 @@ export default function Home() {
       AlertStatus(true)   //パスワードが不一致のため表示
     }
   });
-  const RegisterSubmit = handleSubmit((data: FormData) => {
+  const RegisterSubmit =  handleSubmit((data: FormData) => {
     handleNext()        //次のステップへ
     handleNext()        //次のステップへ
+    const url = process.env.API_URI + '/api/v1/user/create';
+    console.log(url)
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: "",
+        username: data.name,
+        password: data.password,
+        email: data.email,
+        image: data.image,
+      }),
+    };
+    fetch(url, requestOptions).then((response) => {
+      if (response.status === 400){
+        setAlert400(true)
+      } else if (response.status === 500){
+        setAlert500(true)
+      } else if (response.status === 201){
+        setAlert201(true)
+      }
+    })
   });
 
   
@@ -140,12 +170,30 @@ export default function Home() {
                         <h3 className={styles.sub_title}>新規作成</h3>
                   </div>
                   <Typography sx={{ mt: 2, mb: 1 }}>
-                    <Alert severity="success">登録が完了しました。</Alert>
-                    <Typography sx={{ mt:2, mb: 1 }}>アカウントが作成されました。実際にログインしてカレンダーに予定を追加してみましょう！</Typography>
+                    {Alert400 && 
+                        <Alert severity="error" sx={{ width: '100%' }}>
+                          リクエストエラー
+                        </Alert>
+                    }
+                    {Alert500 &&
+                        <Alert severity="error" sx={{ width: '100%' }}>
+                          サーバーエラー
+                        </Alert>
+                    }
+                    {Alert201 &&
+                        <Alert severity="success" sx={{ width: '100%' }}>
+                          登録が完了しました。
+                        </Alert>
+                    }
+                  {Alert400 && <Typography sx={{ mt:2, mb: 1 }}>登録できない文字が含まれている。もしくは、すでに登録済みのメールアドレスを使用している可能性があります。もう一度登録し直してください。</Typography>}
+                  {Alert500 && <Typography sx={{ mt:2, mb: 1 }}>不正なリクエストです。もう一度登録し直してください。</Typography>}
+                  {Alert201 && <Typography sx={{ mt:2, mb: 1 }}>アカウントが作成されました。実際にログインしてカレンダーに予定を追加してみましょう！</Typography>}
                   </Typography>
                   <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                     <Box sx={{ flex: '1 1 auto' }} />
-                    <Button variant='contained' onClick={() => {window.location.href = '/api/auth/signin'}}>ログインへ</Button>
+                    {Alert400 && <Button variant='outlined' onClick={() => {window.location.href = '/user/register'}}>登録画面へ</Button>}
+                    {Alert500 && <Button variant='outlined' onClick={() => {window.location.href = '/user/register'}}>登録画面へ</Button>}
+                    {Alert201 && <Button variant='contained' onClick={() => {window.location.href = '/api/auth/signin'}}>ログインへ</Button>}
                   </Box>
                 </div>
               </React.Fragment>

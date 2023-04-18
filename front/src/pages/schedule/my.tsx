@@ -27,7 +27,7 @@ export default function My() {
                 <Head>
                     <title>予定共有サイト</title>
                     <meta name="description" content="自分の予定を他の人と簡単に共有することができます。" />
-                    <link rel="icon" href="favicon.ico" />
+                    <link rel="icon" href="../favicon.ico" />
                 </Head>
                 <Header site="my" />
                 <LoginSnackBar />

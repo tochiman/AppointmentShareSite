@@ -19,8 +19,7 @@ services:
       api:
         condition: service_started
     networks:
-      app_network:
-        ipv4_address: 192.168.100.1
+      - frontend
       
   api:
     container_name: AppApi
@@ -42,8 +41,8 @@ services:
       db:
         condition: service_started
     networks:
-      app_network:
-        ipv4_address: 192.168.100.2
+      - frontend
+      - backend
 
   db:
     container_name: AppDB
@@ -65,18 +64,22 @@ services:
       #   source: ./db/init
       #   target: /docker-entrypoint-initdb.d
     networks:
-      app_network:
-        ipv4_address: 192.168.100.3
+      - backend
 
 volumes:
   mysql_volume:
     name: mysql_volume
 
 networks:
-  app_network:
+  frontend:
     driver: bridge
     ipam:
-     driver: default
-     config:
-       - subnet: 192.168.100.0/24
-         gateway: 192.168.100.254
+      driver: default
+      config:
+        - subnet: 192.168.10.0/24
+  backend:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.20.0/24
