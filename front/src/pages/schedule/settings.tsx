@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { useSession } from 'next-auth/react'
 import Header from '../../component/Header'
 import styles from '@/styles/Home.module.css'
-import * as React from 'react';
+import { useState, ReactNode, Fragment } from 'react'
 import { useForm } from 'react-hook-form'
 import {
     Button,
@@ -14,14 +14,11 @@ import {
     Typography,
     Alert,
     IconButton,
-    Input,
-    FilledInput,
     OutlinedInput,
     InputLabel,
+    Table,
     InputAdornment,
-    MenuItem,
     FormControl,
-    Table, 
     TableBody, 
     TableCell, 
     TableContainer, 
@@ -37,10 +34,10 @@ export default function Settings() {
     const {data: session, status: loading} = useSession()
 
     //コンポーネントの状態管理
-    const [AlertOn, AlertStatus] = React.useState(false)
-    const [showPassword, setShowPassword] = React.useState(false);
-    const [showPasswordConfirm, setShowPasswordConfirm] = React.useState(false);
-    const [formValue, setFormValue] = React.useState({
+    const [AlertOn, AlertStatus] = useState(false)
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+    const [formValue, setFormValue] = useState({
         name : "",
         image : "", 
         email : "",
@@ -55,7 +52,7 @@ export default function Settings() {
 
     //ステップバー関連
     const steps = ['再設定', '確認', '登録完了'];
-    const [activeStep, setActiveStep] = React.useState(0);
+    const [activeStep, setActiveStep] = useState(0);
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -126,7 +123,7 @@ export default function Settings() {
                         {steps.map((label, index) => {
                             const stepProps: { completed?: boolean } = {};
                             const labelProps: {
-                            optional?: React.ReactNode;
+                            optional?: ReactNode;
                             } = {};
                             return (
                             <Step key={label} {...stepProps}>
@@ -136,7 +133,7 @@ export default function Settings() {
                         })}
                         </Stepper>
                         {activeStep === steps.length ? (
-                        <React.Fragment>
+                        <Fragment>
                             <div className={styles.new_border}>
                             <div>
                                     <h1 className={styles.sub_title}>アカウント再設定</h1>
@@ -150,9 +147,9 @@ export default function Settings() {
                                 <Button variant='contained' onClick={() => {window.location.href = '/'}}>ログインへ</Button>
                             </Box>
                             </div>
-                        </React.Fragment>
+                        </Fragment>
                         ) : (
-                        <React.Fragment>
+                        <Fragment>
                             <div className={styles.new_border}>
                                 <div>
                                     <h1 className={styles.sub_title}>アカウント再設定</h1>
@@ -264,7 +261,7 @@ export default function Settings() {
                                 </form>
                                 ): null}
                             </div>
-                        </React.Fragment>
+                        </Fragment>
                         )}
                     </Box>
                 </div>

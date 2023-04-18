@@ -1,6 +1,5 @@
 import Head from 'next/head'
-import Button from '@mui/material/Button'
-import { signOut, useSession} from 'next-auth/react'
+import { useSession} from 'next-auth/react'
 import Header from '../../component/Header'
 
 export default function Everyone() {

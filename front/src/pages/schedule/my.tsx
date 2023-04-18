@@ -1,7 +1,6 @@
 import Head from 'next/head'
-import { signOut, useSession} from 'next-auth/react'
+import { useSession} from 'next-auth/react'
 import Header from '../../component/Header'
-import { useState, useEffect } from 'react'
 import LoginSnackBar from '@/component/loginSnack'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -107,7 +106,7 @@ export default function My() {
                         }}
                         />
                     </div>         
-                    </main>
+                </main>
             </>
         )
     } 

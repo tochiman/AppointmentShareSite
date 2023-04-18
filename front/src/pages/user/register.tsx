@@ -1,7 +1,7 @@
 import Head from 'next/head'
-import * as React from 'react';
 import styles from '@/styles/Home.module.css'
-import {signIn, useSession} from 'next-auth/react'
+import { useState, SyntheticEvent, ReactNode, Fragment } from 'react'
+import { useSession } from 'next-auth/react'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
@@ -32,32 +32,22 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 export default function Home() {
 
   //セッション管理
-  const {data: session, status: loading} = useSession()
+  const {data: session} = useSession()
 
   //コンポーネントの状態管理
-  const [AlertOn, AlertStatus] = React.useState(false)
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [showPasswordConfirm, setShowPasswordConfirm] = React.useState(false);
-  const [formValue, setFormValue] = React.useState({
+  const [AlertOn, AlertStatus] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+  const [formValue, setFormValue] = useState({
       name : "",
       image : "", 
       email : "",
       password : "",
       password_confirm : "",
   });
-  const [open, setOpen] = React.useState(false);
-  const [Alert400, setAlert400] = React.useState(false);
-  const [Alert500, setAlert500] = React.useState(false);
-  const [Alert201, setAlert201] = React.useState(false);
-  
-
-  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
+  const [Alert400, setAlert400] = useState(false);
+  const [Alert500, setAlert500] = useState(false);
+  const [Alert201, setAlert201] = useState(false);
 
   //パスワードの表示・非表示
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -66,7 +56,7 @@ export default function Home() {
 
   //ステップバー関連
   const steps = ['アカウント登録', '確認', '結果'];
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -104,15 +94,12 @@ export default function Home() {
       handleNext()        //次のステップへ
       setFormValue(data)
       AlertStatus(false)  //パスワードが一致しているため非表示
-    } else if (data.password !== data.password_confirm) {
-      AlertStatus(true)   //パスワードが不一致のため表示
-    }
+    } else if (data.password !== data.password_confirm) AlertStatus(true)   //パスワードが不一致のため表示
+
   });
   const RegisterSubmit =  handleSubmit((data: FormData) => {
-    handleNext()        //次のステップへ
-    handleNext()        //次のステップへ
+    handleNext();handleNext();        //次のステップへ
     const url = process.env.API_URI + '/api/v1/user/create';
-    console.log(url)
 
     const requestOptions = {
       method: 'POST',
@@ -126,13 +113,9 @@ export default function Home() {
       }),
     };
     fetch(url, requestOptions).then((response) => {
-      if (response.status === 400){
-        setAlert400(true)
-      } else if (response.status === 500){
-        setAlert500(true)
-      } else if (response.status === 201){
-        setAlert201(true)
-      }
+      if (response.status === 400) setAlert400(true);
+      else if (response.status === 500) setAlert500(true);
+      else if (response.status === 201) setAlert201(true);
     })
   });
 
@@ -145,7 +128,7 @@ export default function Home() {
         <Head>
           <title>予定共有サイト</title>
           <meta name="description" content="自分の予定を他の人と簡単に共有することができます。" />
-          <link rel="icon" href="favicon.ico" />
+          <link rel="icon" href="../favicon.ico" />
         </Head>
         <div className={styles.main}>
           <Box sx={{ width: '100%' }}>
@@ -153,7 +136,7 @@ export default function Home() {
               {steps.map((label, index) => {
                 const stepProps: { completed?: boolean } = {};
                 const labelProps: {
-                  optional?: React.ReactNode;
+                  optional?: ReactNode;
                 } = {};
                 return (
                   <Step key={label} {...stepProps}>
@@ -163,28 +146,16 @@ export default function Home() {
               })}
             </Stepper>
             {activeStep === steps.length ? (
-              <React.Fragment>
+              <Fragment>
                 <div className={styles.new_border}>
                   <div>
-                        <h1 className={styles.auth_title}>予定共有サイト</h1>
-                        <h3 className={styles.sub_title}>新規作成</h3>
+                    <h1 className={styles.auth_title}>予定共有サイト</h1>
+                    <h3 className={styles.sub_title}>新規作成</h3>
                   </div>
                   <Typography sx={{ mt: 2, mb: 1 }}>
-                    {Alert400 && 
-                        <Alert severity="error" sx={{ width: '100%' }}>
-                          リクエストエラー
-                        </Alert>
-                    }
-                    {Alert500 &&
-                        <Alert severity="error" sx={{ width: '100%' }}>
-                          サーバーエラー
-                        </Alert>
-                    }
-                    {Alert201 &&
-                        <Alert severity="success" sx={{ width: '100%' }}>
-                          登録が完了しました。
-                        </Alert>
-                    }
+                    {Alert400 && <Alert severity="error" sx={{ width: '100%' }}>リクエストエラー</Alert>}
+                    {Alert500 && <Alert severity="error" sx={{ width: '100%' }}>サーバーエラー</Alert>}
+                    {Alert201 && <Alert severity="success" sx={{ width: '100%' }}>登録が完了しました。</Alert>}
                   {Alert400 && <Typography sx={{ mt:2, mb: 1 }}>登録できない文字が含まれている。もしくは、すでに登録済みのメールアドレスを使用している可能性があります。もう一度登録し直してください。</Typography>}
                   {Alert500 && <Typography sx={{ mt:2, mb: 1 }}>不正なリクエストです。もう一度登録し直してください。</Typography>}
                   {Alert201 && <Typography sx={{ mt:2, mb: 1 }}>アカウントが作成されました。実際にログインしてカレンダーに予定を追加してみましょう！</Typography>}
@@ -196,9 +167,9 @@ export default function Home() {
                     {Alert201 && <Button variant='contained' onClick={() => {window.location.href = '/api/auth/signin'}}>ログインへ</Button>}
                   </Box>
                 </div>
-              </React.Fragment>
+              </Fragment>
             ) : (
-              <React.Fragment>
+              <Fragment>
                   <div className={styles.new_border}>
                     <div>
                         <h1 className={styles.auth_title}>予定共有サイト</h1>
@@ -258,11 +229,7 @@ export default function Home() {
                           <p className={styles.helperText}>確認のためにもう一度入力してください</p>
                         </div>
                         <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                          {activeStep === 0 ? 
                           <Button color="inherit" onClick={() => {window.location.href = '/'}} sx={{ mr: 1, width: "50%" }} variant='outlined' >戻る</Button>
-                          :
-                          <Button color="inherit" onClick={handleBack} sx={{ mr: 1, width: "50%" }} variant='outlined' >戻る</Button>
-                          }
                           <Box sx={{ flex: '1 1 auto' }} />
                             <Button type="submit" variant='contained' sx={{ mr: 1, width: "50%" }}>
                               {activeStep === steps.length - 1 ? '作成' : '次へ'}
@@ -298,11 +265,7 @@ export default function Home() {
                           </Table>
                         </TableContainer>
                         <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                          {activeStep === 0 ? 
-                          <Button color="inherit" onClick={() => {window.location.href = '/'}} sx={{ mr: 1, width: "50%" }} variant='outlined' >戻る</Button>
-                          :
                           <Button color="inherit" onClick={handleBack} sx={{ mr: 1, width: "50%" }} variant='outlined' >戻る</Button>
-                          }
                           <Box sx={{ flex: '1 1 auto' }} />
                             <Button type="submit" variant='contained' sx={{ mr: 1, width: "50%" }}>
                               {activeStep === steps.length - 1 ? '作成' : '次へ'}
@@ -311,7 +274,7 @@ export default function Home() {
                       </form>
                     ): null}
                 </div>
-              </React.Fragment>
+              </Fragment>
             )}
           </Box>
         </div>
