@@ -3,31 +3,35 @@ import CredentialsProviders from "next-auth/providers/credentials"
 import GoogleProvider from 'next-auth/providers/google'
 
 type TypeResult = {
-  id: string;
-  username: string,
-  password: string,
-  email: string,
-  image: string,
+  result: [{
+    id: string;
+    username: string,
+    password: string,
+    email: string,
+    image: string,
+  }],
+  status: string,
 };
 
 // credentials の情報から、ログイン可能か判定してユーザー情報を返す関数
 const findUserByCredentials = credentials  => {
-  // let list: TypeResult[] = []
-  const url = process.env.API_URI + '/api/v1/user/info?email=' + credentials.email;
-  const result = fetch(url).then((result) => console.log(result.json()))
-  // if (result.status === '200 OK'){
-  //   list = result.content
-  //   console.log(list)
-  // } 
-  // if (
-  //   credentials.password === result.
-  // ) {
-  //   // ログイン可ならユーザー情報を返却
-  //   return { id: 1, name: "taro",  email: credentials.email, image: "https://img.icons8.com/pastel-glyph/64/000000/person-male--v2.png" }
-  // } else {
-  //   // ログイン不可の場合は null を返却
-  //   return null
-  // }
+  let UserInFormation: TypeResult;
+  const FetchUserAPI = async (): Promise<TypeResult> => {
+    const url = 'http://localhost:8080/api/v1/user/info?email=' + credentials.email
+    const result = await fetch(url)
+    const user = await result.json()
+    return user[0]
+  }
+  FetchUserAPI().then((user) => {
+    UserInFormation = user
+  })
+  if ( credentials.email === process.env.USER_EMAIL && credentials.password === process.env.USER_PASSWORD ) {
+    // ログイン可ならユーザー情報を返却
+    return { id: 1, name: "taro",  email: credentials.email, image: "https://img.icons8.com/pastel-glyph/64/000000/person-male--v2.png" }
+  } else {
+    // ログイン不可の場合は null を返却
+    return null
+  }
 }
 
 const options = {
