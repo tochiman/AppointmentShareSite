@@ -22,7 +22,7 @@ func GetUserInformation(c *gin.Context) {
 	userService := service.UserService{}
 	getData := userService.GetUserInformation(getEmail)
 	if len(getData) == 0 {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusNotFound, gin.H{
 			"status": "none",
 		})
 	} else {
