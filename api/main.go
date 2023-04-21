@@ -21,6 +21,8 @@ func main() {
 		AllowMethods: []string{
 			"POST",
 			"GET",
+			"PUT",
+			"DELETE",
 		},
 		// 許可したいHTTPリクエストヘッダ
 		AllowHeaders: []string{

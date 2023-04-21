@@ -55,7 +55,7 @@ export default function Home() {
 
 
   //ステップバー関連
-  const steps = ['アカウント登録', '確認', '結果'];
+  const steps = ['入力', '確認', '結果'];
   const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = () => {

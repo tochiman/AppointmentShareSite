@@ -1,7 +1,27 @@
-import NextAuth from 'next-auth'
+import NextAuth, { DefaultSession } from 'next-auth'
 import CredentialsProviders from "next-auth/providers/credentials"
 import GoogleProvider from 'next-auth/providers/google'
-import { Type } from 'typescript';
+import { JWT } from "next-auth/jwt"
+
+declare module "next-auth" {
+  /**
+   * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
+   */
+  interface Session {
+    user: {
+      /** The user's postal address. */
+      id: string
+    } & DefaultSession["user"]
+  }
+}
+
+declare module "next-auth/jwt" {
+  /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
+  interface JWT {
+    /** OpenID ID Token */
+    id?: string
+  }
+}
 
 type TypeResult = {
   result: [{
@@ -63,14 +83,26 @@ const options = {
     }),
   ],
   callbacks: {
+    async signIn(){
+      //ログイン後にTOKENを発行する
+    },
+    async signOut(){
+      //ログアウト後にTOKENを破棄する処理
+    },
     async session({ session, token }) {
       session.accessToken = token.accessToken;
+      session.user.id = token.id
       return session;
     },
-    async jwt({ token, account }) {
+    async jwt({ token, account, user }) {
       if (account) token.accessToken = account.access_token;
+      if (user) token.id = user.id
       return token
     },
+  },
+  theme: {
+    colorScheme: "light", // "auto" | "dark" | "light"'
+    logo: process.env.NEXTAUTH_URL + "/favicon.ico",
   }
 }
 

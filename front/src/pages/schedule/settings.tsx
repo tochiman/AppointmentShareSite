@@ -51,7 +51,7 @@ export default function Settings() {
 
 
     //ステップバー関連
-    const steps = ['再設定', '確認', '登録完了'];
+    const steps = ['入力', '確認', '結果'];
     const [activeStep, setActiveStep] = useState(0);
 
     const handleNext = () => {
@@ -87,19 +87,29 @@ export default function Settings() {
         resolver: yupResolver(schema),
     });
     const onSubmit = handleSubmit((data: FormData) => {
-    event?.preventDefault()
-    if (data.password === data.password_confirm){
-        handleNext()        //次のステップへ
-        setFormValue(data)
-        AlertStatus(false)  //パスワードが一致しているため非表示
-    } else if (data.password !== data.password_confirm) {
-        AlertStatus(true)   //パスワードが不一致のため表示
-    }
+        if (data.password === data.password_confirm){
+            handleNext()        //次のステップへ
+            setFormValue(data)
+            AlertStatus(false)  //パスワードが一致しているため非表示
+        } else if (data.password !== data.password_confirm) {
+            AlertStatus(true)   //パスワードが不一致のため表示
+        }
     });
     const RegisterSubmit = handleSubmit((data: FormData) => {
-    handleNext()        //次のステップへ
-    handleNext()        //次のステップへ
+        handleNext();handleNext()        //次のステップへ
 
+        const url = process.env.API_URI + '/api/v1/user/update'
+        const requestOptions = {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                id: "",
+                username: data.name,
+                password: data.password,
+                email: data.email,
+                image: data.image,
+            }),
+        }
     });
 
     if (!session){
@@ -158,9 +168,9 @@ export default function Settings() {
                                 <form onSubmit={onSubmit}>
                                     {errors.password && <Alert severity='error' sx={{mb:"10px"}} >{errors.password.message}</Alert>}
                                     {AlertOn === false ? null: <Alert severity='error'>パスワードが一致していません。再度入力してください。</Alert>}
-                                    <TextField id="outlined-basic" label="名前" variant="outlined" margin='normal' sx={{ width:"100%" }} {...register('name',{required:true})} required />
-                                    <TextField id="outlined-basic" label="アカウント画像" helperText="CDN形式で配布されている画像を追加できます" variant="outlined" margin='normal' sx={{ width:"100%" }} {...register('image',{required:true})}/>
-                                    <TextField id="outlined-basic" type='email' label="メールアドレス" variant="outlined" margin='normal' sx={{ width:"100%", mb: "20px" }} {...register('email',{required:true})} required />
+                                    <TextField id="outlined-basic" label="名前" variant="outlined" margin='normal' defaultValue={session.user?.name} sx={{ width:"100%" }} {...register('name',{required:true})} required />
+                                    <TextField id="outlined-basic" label="アカウント画像" helperText="CDN形式で配布されている画像を追加できます" variant="outlined" margin='normal' defaultValue={session.user?.image} sx={{ width:"100%" }} {...register('image',{required:true})}/>
+                                    <TextField id="outlined-basic" type='email' label="メールアドレス" variant="outlined" margin='normal' defaultValue={session.user?.email} sx={{ width:"100%", mb: "20px" }} {...register('email',{required:true})} required />
                                     <div>
                                     <FormControl sx={{ mb: '0px', width: '100%' }} variant="outlined">
                                         <InputLabel htmlFor="outlined-adornment-password">パスワード</InputLabel>
