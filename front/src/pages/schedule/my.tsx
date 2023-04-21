@@ -1,5 +1,6 @@
 import Head from 'next/head'
-import { useSession} from 'next-auth/react'
+import { useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
 import Header from '../../component/Header'
 import LoginSnackBar from '@/component/loginSnack'
 import FullCalendar from '@fullcalendar/react'
@@ -10,6 +11,11 @@ import styles from '@/styles/Home.module.css'
 
 export default function My() {
     const {data: session, status: loading} = useSession()  
+    const [statusNotification, setNotification] = useState(false)
+    useEffect(() => {
+            setNotification(true)
+        }
+      ,[])
 
     if (!session){
         return null
@@ -29,7 +35,7 @@ export default function My() {
                     <link rel="icon" href="../favicon.ico" />
                 </Head>
                 <Header site="my" />
-                <LoginSnackBar />
+                {statusNotification && <LoginSnackBar />}
                 <main>
                     <div id="modal"></div>
                     <div className={styles.FullCalendar}>

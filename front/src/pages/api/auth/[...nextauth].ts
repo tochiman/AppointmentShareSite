@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth'
 import CredentialsProviders from "next-auth/providers/credentials"
 import GoogleProvider from 'next-auth/providers/google'
+import { Type } from 'typescript';
 
 type TypeResult = {
   result: [{
@@ -13,26 +14,24 @@ type TypeResult = {
   status: string,
 };
 
-const FetchUserAPI = async (credentials): Promise<TypeResult> => {
-  const url = 'http://api:8080/api/v1/user/info?email=' + credentials.email 
-  const result = fetch(url, {method: 'GET', headers:{'Content-Type':'application/json'}})
-   .then(res => res.json()) 
-  .catch(resp => {
-    console.log(resp)
-  })
-  return result
-}
-
 // credentials の情報から、ログイン可能か判定してユーザー情報を返す関数
-const findUserByCredentials = credentials  => {
-  const result = FetchUserAPI(credentials)
-  // if ( credentials.email && credentials.password === process.env.USER_PASSWORD ) {
-  //   // ログイン可ならユーザー情報を返却
-  //   return { id: 1, name: "taro",  email: credentials.email, image: "https://img.icons8.com/pastel-glyph/64/000000/person-male--v2.png" }
-  // } else {
-  //   // ログイン不可の場合は null を返却
-  //   return null
-  // }
+const FetchUserAPI = async (credentials) => {
+  const url = 'http://api:8080/api/v1/user/info?email=' + credentials.email 
+  const result = await fetch(url, {method: 'GET', headers:{'Content-Type':'application/json'}})
+  const ResultJson: TypeResult = await result.json()
+  const res = ResultJson.result[0]
+  if (ResultJson.status == 'ok') {
+    if ( credentials.email === res.email && credentials.password === res.password ) {
+      // ログイン可ならユーザー情報を返却
+      if ( res.image == '') res.image = process.env.NEXTAUTH_URL + "/person.png" //画像が指定されていない場合はこちら側でデフォルト画像を提供する
+      return { id: res.id, name: res.username,  email: res.email, image: res.image }
+    } else {
+      // ログイン不可の場合は null を返却
+      return null
+    }
+  } else if ( ResultJson.status == 'none') {
+      return null
+  }
 }
 
 const options = {
@@ -47,7 +46,7 @@ const options = {
       },
       // 認証の関数
       async authorize(credentials) {
-        const user = findUserByCredentials(credentials)
+        const user = FetchUserAPI(credentials)
         if (user) {
           // 返されたオブジェクトはすべてJWTの`user`プロパティに保存される
           return Promise.resolve(user)
