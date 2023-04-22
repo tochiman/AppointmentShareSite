@@ -51,7 +51,7 @@ func main() {
 	{
 		tokenpath.GET("/get", controller.GetToken)
 		tokenpath.POST("/create", controller.AddToken)
-		// tokenpath.DELETE("/delete", controller.DeleteToken)
+		tokenpath.DELETE("/delete", controller.DeleteToken)
 	}
 	// calendarpath := v1path.Group("/calendar")
 	// {

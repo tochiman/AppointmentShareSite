@@ -44,13 +44,13 @@ func (IdService) AddToken(token *model.Token) error {
 	return nil
 }
 
-// func (IdService) DeleteToken(id string)error{
-// 	db := connectDB()
-// 	defer db.Close()
+func (IdService) DeleteToken(token *model.Token)error{
+	db := connectDB()
+	defer db.Close()
 
-// 	_, err := db.Exec("DELETE FROM token WHERE id IN(SELECT id FROM token WHERE token=?)", token)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+	_, err := db.NamedExec("DELETE FROM token WHERE id=:id AND token=:token", token)
+	if err != nil {
+		return err
+	}
+	return nil
+}

@@ -40,7 +40,7 @@ type TypeResult = {
 
 // credentials の情報から、ログイン可能か判定してユーザー情報を返す関数
 const FetchUserAPI = async (credentials) => {
-  const url = process.env.API_URI + '/api/v1/user/info?email=' + credentials.email 
+  const url = process.env.API_BACK + '/api/v1/user/info?email=' + credentials.email 
   const result = await fetch(url, {method: 'GET', headers:{'Content-Type':'application/json'}})
   const ResultJson: TypeResult = await result.json()
   const res = ResultJson.result[0]
@@ -57,6 +57,24 @@ const FetchUserAPI = async (credentials) => {
       return null
   }
 }
+
+// const CreateTokenAPI = async () => {
+//   const url = process.env.API_BACK + '/api/v1/token/create'
+//   const fetchOptions = {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify{
+//       'id': ,
+//     }
+
+//   const result = await fetch(url, fetchOptions)
+// }
+
+// const DestroyTokenAPI = async () => {
+
+// }
 
 const options = {
   providers: [
@@ -89,9 +107,11 @@ const options = {
   callbacks: {
     // async signIn(){
     //   //ログイン後にTOKENを発行する
+    //   CreateTokenAPI()
     // },
     // async signOut(){
     //   //ログアウト後にTOKENを破棄する処理
+    //   DestroyTokenAPI()
     // },
     async session({ session, token }) {
       session.accessToken = token.accessToken;

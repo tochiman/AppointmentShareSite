@@ -62,6 +62,28 @@ func AddToken(c *gin.Context) {
 	}
 }
 
-// func DeleteToken(c *gin.Context){
+func DeleteToken(c *gin.Context){
+	var tokenModel model.Token
 
-// }
+	err := c.Bind(&tokenModel)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+            "status":  "400 Bad Request",
+            "content": err.Error(),
+        })
+        return
+    }
+	tokenService := service.IdService{}
+	err = tokenService.DeleteToken(&tokenModel)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+            "status":  "500 Server Internal Error",
+            "content": err.Error(),
+        })
+        return
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+            "status":  "200 OK",
+        })
+	}
+}

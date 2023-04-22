@@ -99,7 +99,7 @@ export default function Home() {
   });
   const RegisterSubmit =  handleSubmit((data: FormData) => {
     handleNext();handleNext();        //次のステップへ
-    const url = process.env.API_URI + '/api/v1/user/create';
+    const url = process.env.API_FRONT + '/api/v1/user/create';
 
     const requestOptions = {
       method: 'POST',
@@ -157,7 +157,7 @@ export default function Home() {
                     {Alert500 && <Alert severity="error" sx={{ width: '100%' }}>サーバーエラー</Alert>}
                     {Alert201 && <Alert severity="success" sx={{ width: '100%' }}>登録が完了しました。</Alert>}
                   {Alert400 && <Typography sx={{ mt:2, mb: 1 }}>登録できない文字が含まれている。もしくは、すでに登録済みのメールアドレスを使用している可能性があります。もう一度登録し直してください。</Typography>}
-                  {Alert500 && <Typography sx={{ mt:2, mb: 1 }}>不正なリクエストです。もう一度登録し直してください。</Typography>}
+                  {Alert500 && <Typography sx={{ mt:2, mb: 1 }}>すでに登録されたメールアドレスです。別のメールアドレスを使用するか、ログインをしてください。</Typography>}
                   {Alert201 && <Typography sx={{ mt:2, mb: 1 }}>アカウントが作成されました。実際にログインしてカレンダーに予定を追加してみましょう！</Typography>}
                   </Typography>
                   <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
