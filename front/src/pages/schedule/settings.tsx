@@ -101,7 +101,7 @@ export default function Settings() {
         const url = process.env.API_URI + '/api/v1/user/update'
         const requestOptions = {
             method: 'PUT',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', 'token':"Here is TOKEN"},
             body: JSON.stringify({
                 id: "",
                 username: data.name,

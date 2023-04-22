@@ -14,7 +14,7 @@ CREATE TABLE  IF NOT EXISTS user (
 
 CREATE TABLE  IF NOT EXISTS token (
     id                      VARCHAR(36) NOT NULL,
-    token                   VARCHAR(210) UNIQUE NOT NULL,
+    token                   VARCHAR(400) UNIQUE NOT NULL,
     FOREIGN KEY uuid(id) REFERENCES user(id) on delete cascade on update cascade
 );
 

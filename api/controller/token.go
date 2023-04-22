@@ -60,6 +60,8 @@ func AddToken(c *gin.Context) {
             "content": gin.H{"token": tokenModel.Token},
         })
 	}
-
-
 }
+
+// func DeleteToken(c *gin.Context){
+
+// }

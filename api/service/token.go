@@ -5,7 +5,9 @@ import (
 	"log"
 )
 
-type IdService struct{}
+type IdService struct{
+	
+}
 
 func (IdService) GetToken(id string) []model.Token{
 	db := connectDB()
@@ -32,15 +34,23 @@ func (IdService) AddToken(token *model.Token) error {
 	db := connectDB()
 	defer db.Close()
 	var err error
-	token.Token, err = Generate_token(210) 
-	if err != nil {
-		return err
-	}
+	token.Token = Generate_token(210) 
 	_, err = db.NamedExec(
-		"INSERT INTO token (id, token) VALUES(:id, :token) ", token.Token)
+		"INSERT INTO token (id, token) VALUES(:id,:token)",token)
 	if err != nil {
 		return err
 	}
 
 	return nil
 }
+
+// func (IdService) DeleteToken(id string)error{
+// 	db := connectDB()
+// 	defer db.Close()
+
+// 	_, err := db.Exec("DELETE FROM token WHERE id IN(SELECT id FROM token WHERE token=?)", token)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }
