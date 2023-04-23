@@ -1,7 +1,9 @@
-import NextAuth, { DefaultSession } from 'next-auth'
+import NextAuth, { DefaultSession, Session } from 'next-auth'
 import CredentialsProviders from "next-auth/providers/credentials"
 import GoogleProvider from 'next-auth/providers/google'
 import { JWT } from "next-auth/jwt"
+import { Account } from 'next-auth'
+import { User } from 'next-auth'
 
 declare module "next-auth" {
   /**
@@ -11,8 +13,14 @@ declare module "next-auth" {
     user: {
       /** The user's postal address. */
       id: string,
-      token: string,
+      accessToken: string,
     } & DefaultSession["user"]
+  }
+  interface User {
+    token:string & DefaultSession["user"]
+  }
+  interface Account {
+    access_token: string
   }
 }
 
@@ -20,10 +28,9 @@ declare module "next-auth/jwt" {
   /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
   interface JWT {
     /** OpenID ID Token */
-    user: {
-      id?: string,
-      token?: string,
-    } & DefaultSession["user"]
+    id: string,
+    accessToken: string,
+
   } 
 }
 
@@ -38,6 +45,13 @@ type TypeResult = {
   status: string,
 };
 
+type ModelToken = {
+  status: string,
+  content: {
+    token: string
+  }
+}
+
 // credentials の情報から、ログイン可能か判定してユーザー情報を返す関数
 const FetchUserAPI = async (credentials) => {
   const url = process.env.API_BACK + '/api/v1/user/info?email=' + credentials.email 
@@ -47,8 +61,23 @@ const FetchUserAPI = async (credentials) => {
   if (ResultJson.status == 'ok') {
     if ( credentials.email == res.email && credentials.password == res.password ) {
       // ログイン可ならユーザー情報を返却
-      if ( res.image == '') res.image = process.env.NEXTAUTH_URL + "/person.png" //画像が指定されていない場合はこちら側でデフォルト画像を提供する
-      return {id: res.id, name: res.username,  email: res.email, image: res.image }
+      const url = process.env.API_BACK + '/api/v1/token/create'
+      const Options = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: res.id,
+        }),
+      };
+    
+      const result = await fetch(url, Options)
+      const ResultJson: ModelToken = await result.json()
+      if (ResultJson.status === '200 OK'){
+        if ( res.image == '') res.image = process.env.NEXTAUTH_URL + "/person.png" //画像が指定されていない場合はこちら側でデフォルト画像を提供する
+        return {id: res.id, name: res.username,  email: res.email, image: res.image, token: ResultJson.content.token}
+      } else {
+        return null
+      }
     } else {
       // ログイン不可の場合は null を返却
       return null
@@ -58,23 +87,6 @@ const FetchUserAPI = async (credentials) => {
   }
 }
 
-// const CreateTokenAPI = async () => {
-//   const url = process.env.API_BACK + '/api/v1/token/create'
-//   const fetchOptions = {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json'
-//     },
-//     body: JSON.stringify{
-//       'id': ,
-//     }
-
-//   const result = await fetch(url, fetchOptions)
-// }
-
-// const DestroyTokenAPI = async () => {
-
-// }
 
 const options = {
   providers: [
@@ -105,20 +117,12 @@ const options = {
     }),
   ],
   callbacks: {
-    // async signIn(){
-    //   //ログイン後にTOKENを発行する
-    //   CreateTokenAPI()
-    // },
-    // async signOut(){
-    //   //ログアウト後にTOKENを破棄する処理
-    //   DestroyTokenAPI()
-    // },
-    async session({ session, token }) {
-      session.accessToken = token.accessToken;
+    async session({ session, token }: {session: Session, token: JWT}) {
       session.user.id = token.id;
+      session.user.accessToken = token.accessToken;
       return session;
     },
-    async jwt({ token, account, user }) {
+    async jwt({ token, account, user }: {token: JWT, account: Account, user: User}) {
       if (account) token.accessToken = account.access_token;
       if (user) {
         token.id = user.id
@@ -126,6 +130,14 @@ const options = {
       }
       return token
     },
+  },
+  session: {
+    jwt: true,
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
+  },
+  jwt:{
+    maxAge: 24 * 60 * 60, // 24 hours
   },
   theme: {
     colorScheme: "light", // "auto" | "dark" | "light"'
