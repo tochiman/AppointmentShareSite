@@ -3,6 +3,7 @@ package controller
 import (
 	"api/model"
 	"api/service"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -87,6 +88,7 @@ func UpdateUserInformation(c *gin.Context) {
 		return
 	}
 	token := c.GetHeader("token")
+	fmt.Println(token)
 	calendarService := service.UserService{}
 	err = calendarService.UpdateUserInformation(&userModel, token)
 	if err!= nil {
@@ -96,7 +98,7 @@ func UpdateUserInformation(c *gin.Context) {
         })
         return
     }
-	c.JSON(http.StatusCreated, gin.H{
+	c.JSON(http.StatusNoContent, gin.H{
 		"status": "ok",
 	})
 }

@@ -44,7 +44,10 @@ export default function Settings() {
         password : "",
         password_confirm : "",
     });
-
+    const [Alert400, setAlert400] = useState(false);
+    const [Alert500, setAlert500] = useState(false);
+    const [Alert201, setAlert201] = useState(false);
+    
     //パスワードの表示・非表示
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleClickShowPasswordConfirm = () => setShowPasswordConfirm((show) => !show);
@@ -65,11 +68,11 @@ export default function Settings() {
 
     //入力フォーム関連
     type FormData = {
-    name: string,
-    image: string,
-    email: string,
-    password: string,
-    password_confirm: string; 
+        name: string,
+        image: string,
+        email: string,
+        password: string,
+        password_confirm: string; 
     };
     const schema = yup.object().shape({
     password: yup
@@ -97,19 +100,25 @@ export default function Settings() {
     });
     const RegisterSubmit = handleSubmit((data: FormData) => {
         handleNext();handleNext()        //次のステップへ
-
-        const url = process.env.API_URI + '/api/v1/user/update'
-        const requestOptions = {
+        let token: string = session?.user.accessToken ?? ""
+        const url = process.env.API_FRONT + '/api/v1/user/update'
+        const Options = {
             method: 'PUT',
-            headers: {'Content-Type': 'application/json', 'token':"Here is TOKEN"},
+            headers: {'Content-Type': 'application/json', 'token': token},
             body: JSON.stringify({
-                id: "",
+                id: session?.user.id,
                 username: data.name,
                 password: data.password,
                 email: data.email,
                 image: data.image,
             }),
         }
+
+        fetch(url, Options).then((response) => {
+            if (response.status === 400) setAlert400(true);
+            else if (response.status === 500) setAlert500(true);
+            else if (response.status === 201) setAlert201(true);
+        }).catch(err => console.log(err))
     });
 
     if (!session){
@@ -166,6 +175,12 @@ export default function Settings() {
                                 </div>
                                 {activeStep === 0 ? (
                                 <form onSubmit={onSubmit}>
+                                    {Alert400 && <Alert severity="error" sx={{ width: '100%' }}>リクエストエラー</Alert>}
+                                    {Alert500 && <Alert severity="error" sx={{ width: '100%' }}>サーバーエラー</Alert>}
+                                    {Alert201 && <Alert severity="success" sx={{ width: '100%' }}>再登録が完了しました。</Alert>}
+                                    {Alert400 && <Typography sx={{ mt:2, mb: 1 }}>登録できない文字が含まれている。もしくは、すでに登録済みのメールアドレスを使用している可能性があります。もう一度登録し直してください。</Typography>}
+                                    {Alert500 && <Typography sx={{ mt:2, mb: 1 }}>使用できない文字が含まれている可能性があります。再度登録しなおしてください。</Typography>}
+                                    {Alert201 && <Typography sx={{ mt:2, mb: 1 }}>アカウントが作成されました。実際にログインしてカレンダーに予定を追加してみましょう！</Typography>}
                                     {errors.password && <Alert severity='error' sx={{mb:"10px"}} >{errors.password.message}</Alert>}
                                     {AlertOn === false ? null: <Alert severity='error'>パスワードが一致していません。再度入力してください。</Alert>}
                                     <TextField id="outlined-basic" label="名前" variant="outlined" margin='normal' defaultValue={session.user?.name} sx={{ width:"100%" }} {...register('name',{required:true})} required />
