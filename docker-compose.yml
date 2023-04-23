@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   front:
+    init: true
     container_name: AppFront
     hostname: 'docker.compose.frontserver.com'
     build: 
@@ -22,6 +23,7 @@ services:
       - frontend
       
   api:
+    init: true
     container_name: AppApi
     hostname: 'docker.compose.apiserver.com'
     build: 
@@ -45,6 +47,7 @@ services:
       - backend
 
   db:
+    init: true
     container_name: AppDB
     hostname: 'docker.compose.dbserver.com'
     build:
