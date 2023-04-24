@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import Header from '../../component/Header'
 import styles from '@/styles/Home.module.css'
 import { useState, ReactNode, Fragment } from 'react'
@@ -163,7 +163,7 @@ export default function Settings() {
                             </Typography>
                             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                                 <Box sx={{ flex: '1 1 auto' }} />
-                                <Button variant='contained' onClick={() => {window.location.href = '/'}}>ログインへ</Button>
+                                <Button variant='contained' onClick={() => {signOut({callbackUrl:"/api/auth/signin"})}}>ログインへ</Button>
                             </Box>
                             </div>
                         </Fragment>

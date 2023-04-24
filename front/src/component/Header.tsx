@@ -62,7 +62,7 @@ const Header: FC<MyComponentProps> = ({ site }) => {
                   };
                   const result = fetch(url, Options).catch(res => {console.log(res)})                
                   signOut({callbackUrl: "/"})
-                }}><img src='../logout_FILL0_wght400_GRAD0_opsz48.svg' width='18px' ></img>ログアウト</p>
+                }}><div><img src='../logout_FILL0_wght400_GRAD0_opsz48.svg' width='18px' ></img>ログアウト</div></p>
               </div>    
               </Modal>
             </ul>
@@ -103,7 +103,19 @@ const Header: FC<MyComponentProps> = ({ site }) => {
                 <a href={myURL}><div>自分の予定</div></a>
                 <a href={everyoneURL}><div>みんなの予定</div></a>
                 <a href={settingsURL}><div>設定</div></a>
-                <p className={styles.logout} onClick={() => {signOut({callbackUrl: "/"})}}><img src='../logout_FILL0_wght400_GRAD0_opsz48.svg' width='18px' ></img>ログアウト</p>
+                <p className={styles.logout} onClick={() => {
+                  const url = process.env.API_FRONT + '/api/v1/token/delete'
+                  const Options = {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      id: session?.user.id,
+                      token: session?.user.accessToken,
+                    }),
+                  };
+                  const result = fetch(url, Options).catch(res => {console.log(res)})                
+                  signOut({callbackUrl: "/"})
+                }}><div><img src='../logout_FILL0_wght400_GRAD0_opsz48.svg' width='18px' ></img>ログアウト</div></p>
               </div>    
               </Modal>
             </ul>
@@ -144,7 +156,19 @@ const Header: FC<MyComponentProps> = ({ site }) => {
                 <a href={myURL}><div>自分の予定</div></a>
                 <a href={everyoneURL}><div>みんなの予定</div></a>
                 <a href={settingsURL}><div>設定</div></a>
-                <p className={styles.logout} onClick={() => {signOut({callbackUrl: "/"})}}><img src='../logout_FILL0_wght400_GRAD0_opsz48.svg' width='18px' ></img>ログアウト</p>
+                <p className={styles.logout} onClick={() => {
+                  const url = process.env.API_FRONT + '/api/v1/token/delete'
+                  const Options = {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      id: session?.user.id,
+                      token: session?.user.accessToken,
+                    }),
+                  };
+                  const result = fetch(url, Options).catch(res => {console.log(res)})                
+                  signOut({callbackUrl: "/"})
+                }}><div><img src='../logout_FILL0_wght400_GRAD0_opsz48.svg' width='18px' ></img>ログアウト</div></p>
               </div>    
               </Modal>
             </ul>
