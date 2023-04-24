@@ -130,7 +130,7 @@ export default function Home() {
           <meta name="description" content="自分の予定を他の人と簡単に共有することができます。" />
           <link rel="icon" href="../favicon.ico" />
         </Head>
-        <div className={styles.main}>
+        <div className={styles.Main}>
           <Box sx={{ width: '100%' }}>
             <Stepper activeStep={activeStep}>
               {steps.map((label, index) => {
@@ -244,6 +244,7 @@ export default function Home() {
                         </Typography>
                         <TableContainer component={Paper}>
                           <Table>
+                          <caption>パスワードは安全のため伏せています</caption>
                             <TableBody>
                               <TableRow>
                                 <TableCell>名前</TableCell>

@@ -16,7 +16,7 @@ export default function Home() {
           <meta name="description" content="自分の予定を他の人と簡単に共有することができます。" />
           <link rel="icon" href="favicon.ico" />
         </Head>
-        <div className={styles.Main}>
+        <div className={styles.Main_index}>
           <div className={styles.auth_border}>
             <h1 className={styles.auth_title}>予定共有サイト</h1>
             <br></br>

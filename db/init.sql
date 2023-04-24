@@ -23,8 +23,8 @@ CREATE TABLE  IF NOT EXISTS calendar (
     start                   VARCHAR(40) NOT NULL,
     end                     VARCHAR(40) NOT NULL,
     title                   VARCHAR(500) NOT NULL,
-    location                VARCHAR(500),
-    description             VARCHAR(500),
+    location                TEXT,
+    description             TEXT,
     userId                  VARCHAR(36) NOT NULL,
     FOREIGN KEY uuid(userId) REFERENCES user(id) on delete cascade on update cascade
 );

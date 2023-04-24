@@ -266,6 +266,7 @@ export default function Settings() {
                                     </Typography>
                                     <TableContainer component={Paper}>
                                     <Table>
+                                    <caption>パスワードは安全のため伏せています</caption>
                                         <TableBody>
                                         <TableRow>
                                             <TableCell>名前</TableCell>
