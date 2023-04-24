@@ -61,7 +61,7 @@ services:
       - ./db/.env_sql
     volumes:
       - type: volume
-        source: mysql_volume
+        source: ASS_volume
         target: /var/lib/mysql
       # - type: bind
       #   source: ./db/init
@@ -70,8 +70,8 @@ services:
       - backend
 
 volumes:
-  mysql_volume:
-    name: mysql_volume
+  ASS_volume:
+    name: ASS_volume
 
 networks:
   frontend:

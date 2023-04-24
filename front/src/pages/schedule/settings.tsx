@@ -113,7 +113,9 @@ export default function Settings() {
                 image: data.image,
             }),
         }
-
+        console.log(session?.user.accessToken)
+        console.log(data)
+        
         fetch(url, Options).then((response) => {
             if (response.status === 400) setAlert400(true);
             else if (response.status === 500) setAlert500(true);
@@ -163,7 +165,19 @@ export default function Settings() {
                             </Typography>
                             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                                 <Box sx={{ flex: '1 1 auto' }} />
-                                <Button variant='contained' onClick={() => {signOut({callbackUrl:"/api/auth/signin"})}}>ログインへ</Button>
+                                <Button variant='contained' onClick={() => {
+                                                    const url = process.env.API_FRONT + '/api/v1/token/delete'
+                                                     const Options = {
+                                                        method: 'DELETE',
+                                                        headers: { 'Content-Type': 'application/json' },
+                                                        body: JSON.stringify({
+                                                        id: session?.user.id,
+                                                        token: session?.user.accessToken,
+                                                        }),
+                                                    };
+                                                    const result = fetch(url, Options).then(res => {console.log(res)}).catch(res => {console.log(res)})
+                                                    signOut({callbackUrl:'/'})
+                                }}>メインへ</Button>
                             </Box>
                             </div>
                         </Fragment>

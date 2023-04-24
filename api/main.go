@@ -32,6 +32,7 @@ func main() {
 			"Content-Length",
 			"Accept-Encoding",
 			"Authorization",
+			"token",
 		},
 		// preflightリクエストの結果をキャッシュする時間
 		MaxAge: 24 * time.Hour,

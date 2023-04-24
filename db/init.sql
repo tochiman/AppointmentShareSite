@@ -9,7 +9,7 @@ CREATE TABLE  IF NOT EXISTS user (
     username                TEXT NOT NULL,
     password                TEXT, 
     email                   VARCHAR(255) unique NOT NULL,
-    image                   MEDIUMBLOB
+    image                   TEXT
 );
 
 CREATE TABLE  IF NOT EXISTS token (
