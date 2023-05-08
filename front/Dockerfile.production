@@ -1,0 +1,35 @@
+FROM node:18.9.1-alpine as dev
+
+# Disable telemetry
+ENV NEXT_TELEMETRY_DISABLED 1
+
+WORKDIR /app
+
+# Building app
+COPY package*.json ./
+
+# Install node_modules
+RUN yarn install --no-progress
+
+COPY ./ ./
+
+# Build
+RUN yarn build
+
+# Running the app
+FROM gcr.io/distroless/nodejs18-debian11 AS runner
+WORKDIR /app
+
+# Mark as prod, disable telemetry, set port
+ENV NODE_ENV production
+ENV PORT 3000
+ENV NEXT_TELEMETRY_DISABLED 1
+
+# Copy from build
+COPY --from=dev /app/next.config.js ./
+COPY --from=dev /app/public ./public
+COPY --from=dev /app/.next ./.next
+COPY --from=dev /app/node_modules ./node_modules
+
+# Run app command
+CMD ["./node_modules/next/dist/bin/next", "start"]

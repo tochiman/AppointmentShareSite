@@ -1,0 +1,84 @@
+version: "3.8"
+services:
+  front:
+    init: true
+    container_name: AppFront
+    hostname: 'docker.compose.frontserver.com'
+    build: 
+      context: ./front
+      dockerfile: Dockerfile.production
+    ports:
+      - 3000:3000
+    volumes:
+      - ./front:/front
+    tty: false
+    depends_on:
+      api:
+        condition: service_started
+    networks:
+      - frontend
+      
+  api:
+    init: true
+    container_name: AppApi
+    hostname: 'docker.compose.apiserver.com'
+    build: 
+      context: ./api
+      dockerfile: Dockerfile.production
+    ports:
+     - 8080:8080
+    tty: false
+    restart: always
+    volumes:
+      - type: bind
+        source: ./api
+        target: /go/src
+    env_file:
+      - ./db/.env_sql
+    depends_on:
+      db:
+        condition: service_started
+    networks:
+      - frontend
+      - backend
+
+  db:
+    init: true
+    container_name: AppDB
+    hostname: 'docker.compose.dbserver.com'
+    build:
+      context: ./db
+      dockerfile: .Dockerfile
+    tty: true
+    # platform: linux/x86_64
+    ports:
+      - 3306:3306
+    env_file:
+      - ./db/.env_sql
+    volumes:
+      - type: volume
+        source: ASS_volume
+        target: /var/lib/mysql
+      # - type: bind
+      #   source: ./db/init
+      #   target: /docker-entrypoint-initdb.d
+    networks:
+      - backend
+
+volumes:
+  ASS_volume:
+    name: ASS_volume
+
+networks:
+  frontend:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.10.0/24
+  backend:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.20.0/24
