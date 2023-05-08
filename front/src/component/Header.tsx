@@ -3,6 +3,7 @@ import styles from '@/styles/Home.module.css'
 import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { FC } from "react";
+import Image from "next/image";
 
 interface MyComponentProps {
   site: string;

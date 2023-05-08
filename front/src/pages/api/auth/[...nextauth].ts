@@ -110,11 +110,11 @@ const options = {
         }
       },
     }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID ?? '',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
-      allowDangerousEmailAccountLinking: true,
-    }),
+    // GoogleProvider({
+    //   clientId: process.env.GOOGLE_CLIENT_ID ?? '',
+    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
+    //   allowDangerousEmailAccountLinking: true,
+    // }),
   ],
   callbacks: {
     async session({ session, token }: {session: Session, token: JWT}) {
@@ -145,4 +145,6 @@ const options = {
   }
 }
 
-export default (req: any, res: any) => NextAuth(req, res, options)
+const nextAuthHandler = (req: any, res: any) => NextAuth(req, res, options)
+
+export default nextAuthHandler
