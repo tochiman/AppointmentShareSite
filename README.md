@@ -38,4 +38,4 @@ docker compose up
 or
 docker compose -f docker-compose-production.yml up
 ```
-6.　`http://localhost:3000`にアクセス
+6.　http://localhost:3000 にアクセス
